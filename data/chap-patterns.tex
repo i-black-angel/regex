@@ -1,0 +1,37 @@
+\chapter{Patterns}
+\label{chap:patterns}
+
+Each character in a regular expression is either understood to be a
+metacharacter with its special meaning, or a regular character with
+its literal meaning. Together, they can be used to identify textual
+material of a given pattern, or process a number of instances of it
+that can vary from a precise equality to a very general similarity of
+the pattern. The pattern sequence itself is an expression that is a
+statement in a language designed specifically to represent prescribed
+targets in the most concise and flexible way to direct the automation
+of text processing of general text files, specific textual forms, or
+of random input strings.
+
+a very simple use of a regular expression would be to locate the same
+word spelled two different % may be we can use 'dif\mbox{}ferent' ways
+in a text editor, for example the regular expression
+\textsf{seriali[sz]e} matches both ``serialise'' and ``serialize''. A
+wildcard match can also achieve this, but wildcard matches differ from
+regular expressions in that wildcards are more limited in what they
+can pattern (having fewer metacharacters and a simple
+language-base). A usual context of wildcard characters is in globbing
+similar names in a list of files, whereas regular expressions are
+usually employed in applications that pattern-match text strings in
+general. For example, the regexp \verb-^[ \t]+|[ \t]+$- matches excess
+whitespace at the beginning or end of a line. An advanced regexp used
+to match any numeral is
+\verb/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/. See
+ Chapter~\ref{chap:examples} for more examples.
+
+A \textbf{regular expression processor} translates a regular
+expression into a nondeterministic finite automaton (NFA), which is
+then made deterministic and run on the target text string to recognize
+substrings that match the regular expression. The picture shows the
+NFA scheme $N(s*)$ obtained from the regex $s*$, where
+$s$ denotes a simpler regex in turn, which has already been
+recursively translate to the NFA $N(s)$.

@@ -1,0 +1,93 @@
+\chapter{Syntax}
+\label{chap:syntax}
+
+A regexp \textsl{pattern} matches a target \textsl{string}. The
+pattern is composed of a sequence of \textsl{atoms}. An atom is a
+single point within the regexp pattern which it tries to match to the
+target string. The simplest atom is a literal, but grouping parts of
+the pattern to match an atom will require using \verb|()| as
+metacharacters. Metacharacters help form: \textsl{atoms};
+\textsl{quantifiers} telling how many atoms (and whether it is
+\textsl{greedy} quantifier or not); a logical OR character, which
+offers a set of alternatives, and a logical NOT character, which
+negates an atom's existence; and back references to refer to previous
+atoms of a completing pattern of atoms. A match is made, not when all
+the atoms of the string are matched, but rather when all the pattern
+atoms in the regular expression have matched. The idea is to make a
+small pattern of characters stand for a large number of possible
+strings, rather than compiling a large list of all the literal
+possibilities.
+
+Depending on the regexp processor there are about fourteen
+metacharacters, characters that may or may not have their literal
+character meaning, depending on context, or whether they are
+``escapted'', i.e. preceded by an escape sequence, in this case, the
+backslash \verb|\|. Modern and POSIX extended regular expressions use
+metacharacters more often than their literal meaning, so to avoid
+"backslash-osis" it makes sense to have a metacharacter escape to a
+literal mode; but starting out, it makes more sense to have the four
+bracketing metacharacters \verb|()| and \verb|{}| be primarily
+literal, and "escape" this usual meaning to become
+metacharacters. Common standards implement both. The usual
+metacharacters are \verb/{}[]()^$.|*+?/ and \verb|\|. The usual
+characters that become metacharacters when escaped are \verb|dsw.DSW|
+and \verb|N|.
+
+\section{Delimiters}
+When entering a regular expression in a programming language, they may
+be represented as a usual string literal, hence usually quoted; this
+is common in C, Java, and Python for instance, where the regular
+expression \verb|re| is entered as \verb|"re"|. However, they are
+often written with slashes as delimiters, as in \verb|/re/| for the
+regular expression \verb|re|. This originates in \verb|ed|, where
+\verb|/| is the editor command for searching, and an expression
+\verb|/re/| can be used to specify a range of lines (matching the
+pattern), which can be combined with other commands on either side,
+most famously \verb|g/re/p| as in \verb|grep| (``global regex
+print''), which is included in most Unix-based operating systems, such
+as Linux distributions. A similar convention is used in \verb|sed|,
+where search and replace is given by \verb|s/regexp/replacement/| and
+patterns can be joined with a comma to specify a range of lines as in
+\verb|/rel/,/re2/|. This notation is particularly well-known due to
+its use in Perl, where it forms part of the syntax distinct from
+normal string literals. In some cases, such as \verb|sed| and Perl,
+alternative delimiters can be used to avoid collision with contents,
+and to avoid having to escape occurrences of the delimiter character
+in the contents. For example, in \verb|sed| the command \verb|s,/,X,|
+will replace a \verb|/| with an \verb|X|, using commas as delimiters.
+
+\section{Standards}
+The IEEE POSIX standard has three sets of compliance: BRE, ERE, and
+SRE for basic, Extended, and Simple Regular Expressions. SRE is
+deprecated, in favor of BRE, as both provide backward
+compatibility. The subsection below covering the \textsl{character}
+classes applies to both BRE and ERE.
+
+BRE and ERE work together. ERE adds \verb|?|, \verb|+|, and \verb/|/,
+and it removes the need to escape the metacharacters \verb|()| and
+\verb|{}|, which are \textsl{required} in BRE. Furthermore, as long as
+the POSIX standard syntax for regular expressions is adhered to, there
+can be, and often is, additional syntax to serve specific (yet POSIX
+compliant) applications. Although POSIX.2 leaves some implementation
+specifics undefined, BRE and ERE provide a ``standard'' which has
+since been adopted as the default syntax of many tools, where the
+choice of BRE or ERE modes is usually a supported option. For example,
+GNU \verb|grep| has the following options: \verb|"grep -E"| for ERE,
+and \verb|"grep -G"| for BRE (the default), and \verb|"grep -P"| for
+Perl regular expressions.
+
+Perl regular expressions have become a de facto standard, having a
+rich and powerful set of atomic expressions. Perl has no ``basic'' or
+``extended'' levels, where the \verb|()| and \verb|{}| may or may not
+have literal meanings. They are always metacharacters, as they are in
+``extended'' mode for POSIX. To get their \textsl{literal} meaning,
+you escape them. Other metacharacters are known to be literal or
+symbolic based on context alone. Perl offers much more functionality:
+``lazy'' regular expressions, backtracking, named capture groups, and
+recursive patterns, all of which are powerful additions to POSIX
+BRE/ERE. (See lazy quantification below.)
+
+\section{POSIX basic and extended}
+In the POSIX standard, Basic Regular Syntax, BRE, requires that the
+metacharacters \verb|()| and \verb|{}| be designated \verb|\(\)| and 
+\verb|\{\}|, whereas Extended Regular Syntax, ERE, does not.

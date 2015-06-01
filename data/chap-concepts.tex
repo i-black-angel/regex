@@ -1,0 +1,54 @@
+\chapter{Basic concepts}
+\label{chap:concept}
+
+A regular expression, often called a \textbf{pattern}, is an
+expression used to specify a set of strings required for a particular
+purpose. A simple way to specify a finite set of strings is to list
+its elements or members. However, there are often more concise ways to
+specify the desired set of strings. For example, the set containing
+the three strings ``Handel'', ``H\"andel'', and ``Haendel'' can be
+specified by the \textbf{pattern} \texttt{H(\"a|ae?)ndel}; we say that
+this pattern \textbf{matches} each of the three strings. In most
+formalisms, if there exists at least one regex that matches a
+particular set then there exists an infinite number of other regex
+that also match it---the specification is not unique. Most formalisms
+provide the following operations to construct regular expressions.
+
+\section{Boolean ``or''}
+  A vertical bar separates alternatives. For example, \verb/gray|grey/ can
+  match ``gray'' or ``grey''.
+
+\section{Grouping}
+  Parentheses are used to define the scope and precedence of the
+  operators (among other uses). For example, \verb/gray|grey/ and
+  \verb/gr(a|e)y/ are equivalent patterns which both describe the set
+  of ``gray'' or ``grey''.
+
+\section{Quantification}
+  A quantifier after a token (such as a character) or group specifies
+  how often that preceding element is allowed to occur. The most
+  common quantifiers are the question mark \verb|?|, the asterisk
+  \verb|*| (derived from the Kleene star), and the plus sign \verb|+| (Kleene
+  plus).
+
+  \begin{tabularx}{335pt}{lX}
+    \verb|?| & The question mark indicates there is \textsl{zero or
+    one} of the preceding element. For example, \verb|colou?r| matches
+    both ``color'' and ``colour''.\\
+    \verb|*| & The asterisk indicates there is \textsl{zero or
+    more} of the preceding element. For example, \verb|ab*c| matches
+    ``ac'', ``abc'', ``abbc'', ``abbbc'', and so on.\\
+    \verb|+| & The plus sign indicates there is \textsl{one or
+    more} of the preceding element. For example, \verb|ab+c| matches
+    ``abc'', ``abbc'', ``abbbc'', and so on, but not ``ac''.
+  \end{tabularx}
+
+  These constructions can be combined to form arbitrarily complex
+  expressions, much like one can construct arithmetical expressions
+  from numbers and the operations $+$, $-$, $\times$, and $\div$. For
+  example, \texttt{H(ae?|\"a)ndel} and \texttt{H(a|ae|\"a)ndel} are
+  both valid patterns which match the same strings as the earlier
+  example, \texttt{H(\"a|ae?)ndel}.
+
+  The precise syntax for regular expressions varies among tools and
+  with context; more detail is given in the Chapter~\ref{chap:syntax}.

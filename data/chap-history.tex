@@ -1,0 +1,75 @@
+\chapter{History}
+\label{chap:history}
+
+Regular expressions originated in 1956, when mathematician Stephen
+cole Kleene described regular languages using his mathematical
+notation called \textsl{regular} sets. These arose in theoretical
+computer science, in the subfields of automata theory (models of
+computation) and the description and classification of formal
+languages. Other early implementations of pattern matching include the
+SNOBOL language, which did not use regular expressions, but instead
+its own syntax.
+
+Regular expressions entered popular use from 1968 in two uses: pattern
+matching in a text editor and lexical analysis in a compiler. Among
+the first appearances of regular expressions in program form was when
+Ken Thompson built Kleene's notation into the editor \verb|QED| as a
+means to match patterns in text files. For speed, Thompson implemented
+regular expression matching by just-in-time compilation (JIT) to IBM
+7094 code on the Compatible Time-Sharing System, an important early
+example of JIT compilation. He later added this capability to the Unix
+editor \verb|ed|, which eventually led to the popular search tool
+\verb|grep|'s use of regular expressions (``grep'' is a word derived
+from the command for regular expression searching in the \verb|ed|
+editor: \verb|g/re/p| meaning ``Global search for Regular Expression
+and Print matching lines''). Around the same time when Thompson
+developed \verb|QED|, a group of researchers including Douglas T. Ross
+implemented a tool based on regular expressions that is used for
+lexical analysis in compiler design.
+
+Many variations of these original forms of regular expressions were
+used in Unix programs at Bell Labs in the 1970s, including \verb|vi|,
+\verb|lex|, \verb|sed|, \verb|AWK|, and \verb|expr|, and in other
+programs such as \verb|Emacs|. Regular expressions were subsequently
+adopted by a wide range of programs, with these early forms
+standardized in the POSIX.2 standard in 1992.
+
+In the 1980s more complicated regular expressions arose in Perl, which
+originally derived from a regex library writtern by Henry Spencer
+(1986), who later wrote an implementation of \textsl{Advanced Regular
+  Expressions} for Tcl. The Tcl library is a hybrid NFA/DFA
+implementation with improved performance characteristics, earning
+praise from Jeffrey Friedl who said, ``\ldots it really seems quite
+wonderful.'' Software projects that have adopted Spencer's Tcl regular
+expression implementation include PostpreSQL. Perl later expanded on
+Spencer's original library to add many new features, but has not yet
+caught up with Spencer's Advanced Regular Expressions implementation
+in terms of performance or Unicode handling. Part of the effort in the
+design of Perl 6 is to improve Perl's regular expression integration,
+and to increase their scope and capabilities to allow the definition
+of parsing expression grammars. The result is a mini-language called
+Perl 6 rules, which are used to define Perl 6 grammar as well as
+provide a tool to programmers in the language. These rules maintain
+existing features of Perl 5.x regular expressions, but also allow
+BNF-style definition of a recursive descent parser via sub-rules.
+
+The use of regular expressions in structured information standards for
+document and database modeling started in the 1960s and expanded in
+the 1980s when industry standards like ISO SGML (precursored by ANSI
+``GCA 101-1983'') consolidated. The kernel of the structure
+specification language standards consists of regular expressions. Its
+use is evident in the DTD element group syntax.
+
+Starting in 1997, Philip Hazel developed \verb|PCRE| (Perl Compatible
+Regular Expressions), which attempts to closely mimic Perl's regular
+expression functionality and is used by many modern tools including
+PHP and Apache HTTP Server.
+
+Today regular expressions are widely supported in programming
+languages, text processing programs (particular lexers), advanced text
+editors, and some other programs. Regular expression support is part
+of the standard library of many programming languages, including Java
+and Python, and is built into the syntax of others, including Perl and
+ECMAScript. Implementations of regular expression functionality is
+often called a \textbf{regular expression engine}, and a number of
+libraries are available for reuse.

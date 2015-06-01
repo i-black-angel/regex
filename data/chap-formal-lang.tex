@@ -1,0 +1,123 @@
+\chapter{Formal language theory}
+\label{chap:formal_lang_theory}
+
+Regular expressions describe regular languages in formal language
+theory. They have the same expressive power as regular grammars.
+
+\section{Formal definition}
+Regular expressions consist of constants and operator symbols that
+denote sets of strings and operations over these sets,
+respectively. The following definition is standard, and found as such
+in most textbooks on formal language theory. Given a finite alphabet
+$\Sigma$, the following constants are defined as regular expressions:
+\begin{itemize}
+\item (empty set) $\varnothing$ denoting the set $\varnothing$.
+\item (empty string) $\varepsilon$ denoting the set containing only
+  the "empty" string, which has no characters at all.
+\item (literal character) a in $\Sigma$ denoting the set containing
+  only the character a.
+\end{itemize}
+Given regular expressions $R$ and $S$, the following operations over them
+are defined to produce regular expressions:
+\begin{itemize}
+\item (concatenation) $RS$ denotes the set of strings that can be
+  obtained by concatenating a string in $R$ and a string in $S$. For
+  example \{``ab'', ``c''\}\{``d'', ``ef''\} $=$ \{``abd'', ``abef'',
+  ``cd'', ``cef''\}.
+\item (alternation) $R | S$ denotes the set union of sets described by
+  $R$ and $S$. For example, if $R$ describes \{``ab'', ``c''\} and $S$
+  describes \{``ab'', ``d'', ``ef''\}, expression $R | S$ describes
+  \{``ab'', ``c'', ``d'', ``ef''\}.
+\item (Kleene star) $R*$ denotes the smallest superset of set
+  sescribed by $R$ that contains $\varepsilon$ and is closed under
+  string concatenation. This is the set of all strings that can be
+  made by concatenating any finite number (including zero) of strings
+  from set described by $R$. For example, \{``0'', ``1''\}* is the set
+  of all finite binary strings (including the empty string), and
+  \{``ab'', ``c''\}* $=$ \{$\varepsilon$, ``ab'', ``c'', ``abab'',
+  ``abc'', ``cab'', ``cc'', ``ababab'', ``abcab'', \ldots\}.
+\end{itemize}
+
+To avoid parentheses it is assumed that the Kleene star has the
+highest priority, then concatenation and then alternation. If there is
+no ambiguity then parentheses may be omitted. For example,
+\verb|(ab)c| can be written as \verb|abc|, and \verb/a|(b(c*))/ can be
+written as \verb/a|bc*/. Many textbooks use the symbols $\cup$, $+$,
+or $\vee$ for alternation instead of the vertical bar.
+
+\textbf{Examples:}
+\begin{itemize}
+\item \verb/a|b*/ denotes \{$\varepsilon$, ``a'', ``b'', ``bb'',
+  ``bbb'', \ldots\}
+\item \verb/(a|b)*/ denotes the set of all strings with no symbols
+  other than ``a'' and ``b'', including the empty string:
+  \{$\varepsilon$, ``a'', ``b'', ``aa'', ``ab'', ``ba'', ``bb'',
+  ``aaa'', \ldots\}
+\item \verb/ab*(c|ε)/ denotes the set of strings starting with ``a'',
+  then zero or more ``b''s and finally optionally a ``c'': \{``a'',
+  ``ac'', ``ab'', ``abc'', ``abb'', ``abbc'', \ldots\}
+\item \verb/(0|(1(01*0)*1))*/ denotes the set of binary numbers that
+  are multiples of 3: \{$\varepsilon$, ``0'', ``00'', ``11'', ``000'',
+  ``011'', ``110'', ``0000'', ``0011'', ``0110'', ``1001'', ``1100'',
+  ``1111'', ``00000'', \ldots\}
+\end{itemize}
+
+\section{Expressive power and compactness}
+The formal definition of regular expressions is purposely parsimonious
+and avoids defining the redundant quantifiers $?$ and $+$, which can
+be expressed as follows: $a+ = aa*$, and $a? = (a|\varepsilon)$.
+Sometimes the complement operator is added, to give a
+\textsl{generalized regular expression}; here $R^c$ matches all
+strings over $\Sigma^*$ that do not match $R$. In principle, the
+complement operator is redundant, as it can always be circumscribed by
+using the other operators. However, the process for computing such a
+representation is complex, and the result may require expressions of a
+size that is double exponentially larger.
+
+Regular expressions in this sense can express the regular languages,
+exactly the class of languages accepted by deterministic finite
+automata. There is, however, a significant difference in
+compactness. Some classes of regular languages can only be described
+by deterministic finite automata whose size grows exponentially in the
+size of the shortest equivalent regular expressions. The standard
+example here is the languages $L_k$ consisting of all strings over the
+alphabet \{$a$, $b$\} whose $k^{th}$-from-last letter equals $a$. On
+one hand, a regular expression describing $L_4$ is given by
+\verb/(a|b)*a(a|b)(a|b)(a|b)/. Generalizing this pattern to $L_k$
+gives the expression
+%% (a|b)*a(a|b)(a|b)...(a|b)
+%%       ------------------
+%%             k-1 times
+\[(a|b)^*\underbrace{a(a|b)(a|b)\ldots(a|b)}_{k-1~times}\]
+
+On the other hand, it is known that every deterministic finite
+automaton accepting the language $L_k$ must have at least $2^k$
+states. Luckily, there is a simple mapping from regular expressions to
+the more general nondeterministic finite automata (NFAs) that does not
+lead to such a blowup in size; for this reason NFAs are often used as
+alternative representations of regular languages. NFAs are a simple
+variation of the type-3 grammars of the Chomsky hierarchy.
+
+Finally, it is worth noting that many real-world ``regular expression''
+engines implement features that cannot be described by the regular
+expressions in the sense of formal language theory; see below for more
+on this.
+
+\section{Deciding equivalence of regular expressions}
+As seen in many of the examples above, there is more than one way to
+construct a regular expression to achieve the same results.
+
+It is possible to write an algorithm that, for two given regular
+expressions, decides whether the described languages are equal; the
+algorithm reduces each expression to a minimal deterministic finite
+state machine, and determinies whether they are isomorphic
+(equivalent).
+
+The redundancy can be eliminated by using Kleene star and set union to
+find an interesting subset of regular expressions that is still fully
+expressive, but perhaps their use can be restricted. This is a
+surprisingly difficult problem. As simple as the regular expressions
+are, there is no method to systematically rewrite them to some normal
+form. The lack of axiom in the past led to the star height problem. In
+1991, Dexter Kozen axiomatized regular expressions with Kleene
+algebra; see Kleene algebra History for details.
