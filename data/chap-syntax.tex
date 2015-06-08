@@ -91,3 +91,137 @@ BRE/ERE. (See lazy quantification below.)
 In the POSIX standard, Basic Regular Syntax, BRE, requires that the
 metacharacters \verb|()| and \verb|{}| be designated \verb|\(\)| and 
 \verb|\{\}|, whereas Extended Regular Syntax, ERE, does not.
+
+\begin{tabularx}{\textwidth}{|c|X|}
+  \hline
+  \textbf{Metacharacter} & \textbf{Description} \\
+  \hline
+  \verb|.| & Matches any single character (many applications exclude
+  newlines, and exactly which characters are considered newlines is flavor-,
+  character-encoding-, and platform-specific, but it is safe to assume that
+  the line feed character is included). Whithin POSIX bracket expressions,
+  the dot character matches a literal dot. For example, \verb|a,c| matches
+  ``abc'', etc., but \verb|[a.c]| matches only ``a'', ``.'', or ``c''.\\
+  \hline
+  \verb|[]| & A bracket expression. Matches a single character that is
+  contained within the brackets. For example, \verb|[abc]| matches ``a'',
+  ``b'', ro ``c''. \verb|[a-z]| specifies a range which matches any lowercase
+  letter from ``a'' to ``z''. These forms can be mixed: \verb|[abcx-z]|
+  matches ``a'', ``b'', ``c'', ``x'', ``y'', or ``z'', as does
+  \verb|[a-cx-z]|.
+
+  The \verb|-| character is treated as a literal character if it is the last
+  or the first (after the \verb|^|, if present) character within the
+  brackets: \verb|[abc-]|, \verb|[-abc]|. Note that backslash escapes are not
+  allowed. The \verb|]| character can be included in a bracket expression if
+  it is the first (after the \verb|^|) character: \verb|[]abc]|.\\
+  \hline
+  \verb|[^]| & Matches a single character that is not contained within the
+  brackets. For example, \verb|[^abc]| matches any character other than
+  ``a'', ``b'', or ``c''. \verb|[^a-z]| matches any single character that is
+  not a lowercase letter from ``a'' to ``z''. Likewise, literal characters
+  and ranges can be mixed.\\ \hline
+  \verb|^| & Matches the starting position within the string. In line-based
+  tools, it matches the starting position of any line.\\ \hline
+  \verb|$| & Matches the ending position of the string or the position just
+  before a string-ending newline. In line-based tools, it matches the ending
+  position of any line.\\ \hline
+  \verb|()| & Defines a marked subexpression. The string matched within the
+  parentheses can be recalled later (see the next entry, \verb|\n|). A marked
+  subexpression is also called a block or capturing group. \textbf{BRE mode
+  requires} \verb|\(\)|.\\ \hline
+  \verb|\n| & Matches what the $n$th marked subexpression matched,
+  where $n$ is a digit from 1 to 9. This construct is vaguely defined
+  in the POSIX.2 standard. Some tools allow referencing more than nine
+  capturing groups.\\ \hline
+  \verb|*| & Matches the preceding element zero or more times. For example,
+  \verb|ab*c| matches ``ac'', ``abc'', ``abbbc'', etc. \verb|[xyz]*| matches
+  ``'', ``x'', ``y'', ``z'', ``zx'', ``zyx'', ``xyzzy'', and so on.
+  \verb|(ab)*| matches ``'', ``ab'', ``abab'', ``ababab'', and so on.\\
+  \hline
+  \verb|{m,n}| & Matches the preceding element at least $m$ and not
+  more than $n$ times. For example, \verb|a{3,5}| matches only ``aaa'',
+  ``aaaa'', and ``aaaaa''. This is not found in a few older instance of
+  regular expressions. \textbf{BRE mode requires} \verb|\{m,n\}|.\\
+  \hline
+\end{tabularx}
+
+\textbf{Examples:}
+\begin{itemize}
+\item \verb|.at| matches any three-character string ending with ``at'',
+  including ``hat'', ``cat'', and ``bat''.
+\item \verb|[hc]at| matches ``hat'' and ``cat''.
+\item \verb|[^b]at| matches all strings matched by \verb|.at| except ``bat''.
+\item \verb|[^hc]at| matches all strings matched by \verb|.at| other than
+  ``hat'' and ``cat''.
+\item \verb|^[hc]at| matches ``hat'' and ``cat'', but only at the beginning
+  of the string or line.
+\item \verb|[hc]at$| matches ``hat'' and ``cat'', but only at the end of
+  the string or line.
+\item \verb|\[.\]| matches any single character surrounded by ``['' and ``]''
+  since the brackets are escaped, for example: ``[a]'' and ``[b]''.
+\item \verb|s.*| matches any number of characters preceded by s, for example:
+  ``saw'' and ``seed''.
+\end{itemize}
+
+\section{POSIX extended}
+The meaning of metacharacters escaped with a backslash is reversed for some
+characters in the POSIX Extended Regular Expression (ERE) syntax. With this
+syntax, a backslash causes the metacharacter to be treated as a literal
+character. So, for example, \verb|\(\)| is now \verb|()| and \verb|\{\}| is
+now \verb|{}|. Additionally, support is removed for \verb|\n| backreferences
+and the following metacharacters are added:
+\begin{tabularx}{\textwidth}{|c|X|}
+  \hline
+  \textbf{Metacharacter} & \textbf{Description} \\ \hline
+  \verb|?| & Matches the preceding element zero or one time. For example, 
+  \verb|ab?c| matches only ``ac'' or ``abc''.\\ \hline
+  \verb|+| & Matches the preceding element one or more time. For example,
+  \verb|ab+c| matches ``abc'', ``abbc'', ``abbbc'', and so on, but not
+  ``ac''.\\ \hline
+  \verb/|/ & The choice (also known as alternation or set union) operator
+  matches either the expression before or the expression after the operator.
+  For example, \verb/abc|def/ matches ``abc'' or ``def''.\\
+  \hline
+\end{tabularx}
+
+\textbf{Examples:}
+\begin{itemize}
+\item \verb|[hc]+at| matches ``hat'', ``cat'', ``hhat'', ``chat'', ``hcat'',
+  ``cchchat'', and so on, but not ``at''.
+\item \verb|[hc]?at| matches ``hat'', ``cat'', and ``at''.
+\item \verb|[hc]*at| matches ``hat'', ``cat'', ``hhat'', ``chat'', ``hcat'',
+  ``cchchat'', ``at'', and so on.
+\item \verb/cat|dog/ matches ``cat'' or ``dog''.
+\end{itemize}
+
+POSIX Extended Regular Expressions can often be used with modern Unix 
+utilities by including the command line flag \verb|-E|.
+
+\section{Character classes}
+The character class is the most basic regular expression concept after a
+literal match. It makes one small sequence of characters match a larger set
+of characters. For example, \verb|[A-Z]| could stand for the upper case
+alphabet, and \verb|\d| could mean any digit. Character classes apply to
+both POSIX levels.
+
+When specifying a range of characters, such as \verb|[a-Z]| (i.e. lowercase
+\verb|a| to uppercase \verb|Z|), the computer's locale settings determine
+the contents by the numeric ordering of the character encoding. They could
+store digits in that sequence, or the ordering could be 
+\textsl{abc\ldots zABC\ldots Z}, or \textsl{aAbBcC\ldots zZ}. So the POSIX
+standard defines a character class, which will be known by the regular 
+expression processor installed. Those definitions are in the following table:
+\begin{tabularx}{\textwidth}{|l|l|l|X|X|}
+  \hline
+  \textbf{POSIX} & \textbf{Perl/Tcl} & \textbf{Vim} & \textbf{ASCII} & \textbf{Description} \\ \hline
+  [:alnum:] & & & [A-Za-z0-9] & Alphanumeric characters \\ \hline
+  & \verb|\w| & \verb|\w| & \verb|[A-Za-z0-9_]| & Alphanumeric characters plus ``\_'' \\ \hline
+  & \verb|\W| & \verb|\W| & \verb|[^A-Za-z0-9_]| & Non-word characters \\ \hline
+  [:alpha:] & & \verb|\a| & \verb|[A-Za-z]| & Alphabetic characters \\ \hline
+  [:blank:] & & \verb|\s| & \verb|[ \t]| & Space and tab \\ \hline
+  & & \verb|\b| & \verb|\<\>| & \verb/(?<=\W)(?=\w)|(?<=\w)(?=\W)/ & Word boundaries \\ \hline
+  [:cntrl:] & & & \verb|[\x00-\x1F\x7F]| & Control characters \\ \hline
+  [:digit:] & \verb|\d| & \verb|\d| & \verb|[0-9]| & Digits \\ 
+  \hline
+\end{tabularx}
